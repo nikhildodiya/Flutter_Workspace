@@ -1,0 +1,144 @@
+API 
+
+=> Login
+
+<?php
+    
+    include('connect.php');
+    
+    $mob=$_REQUEST["Number"];
+    $pass=$_REQUEST["Password"];
+    
+    $sql="select * from newdonor where Number='$mob' and Password ='$pass'";
+    
+    
+    $ex=mysqli_query($con,$sql);
+    
+    $no=mysqli_num_rows($ex);
+    
+    
+    if($no>0)
+    {
+    $fet=mysqli_fetch_object($ex);
+    echo json_encode(['code'=>200]);
+    }
+    else
+    {
+    echo "0";
+    }
+
+?>
+
+
+==========================================================================================================================================================================================================================================
+
+=> ADD / REGISTER
+
+<?php
+
+    include('connect.php');
+    
+    $Name = $_POST["Name"];
+    $Email = $_POST["Email"];
+    $Number = $_POST["Number"];
+    $Password = $_POST["Password"];
+    $Confirmpassword = $_POST["Confirmpassword"];
+    
+
+
+    if($Name=="" && $Email=="" && $Number=="" && $Password=="" && $Confirmpassword=="")
+    {
+        
+        echo '0';
+        
+    }
+    else
+    {
+        $sql = "insert into newdonor(Name,Email,Number,Password,Confirmpassword) values ('$Name','$Email','$Number','$Password','$Confirmpassword')";
+        mysqli_query($con,$sql);
+    }
+?>
+
+
+==========================================================================================================================================================================================================================================
+
+=> VIEW
+
+<?php
+    
+    include('connect.php');
+    $sql ="select * from info";
+    $r = mysqli_query($con,$sql);
+    $response= array();
+    
+    while($row = mysqli_fetch_array($r))
+    {
+        
+        $value["id"] = $row["id"];
+        $value["name"] = $row["name"];
+        $value["email"] = $row["email"];
+        
+        array_push($response,$value);
+        
+    }
+
+    echo json_encode($response);
+    mysqli_close($con);
+
+
+?>
+
+==========================================================================================================================================================================================================================================
+
+UPDATE
+
+
+<?php
+
+    include('connect.php');
+    
+    $id=$_POST["id"];
+    $name= $_POST["name"];
+    $email= $_POST["email"];
+
+    
+    $sql ="update info set name='$name',email='$email' where id ='$id'";
+    
+    if(mysqli_query($con,$sql))
+    {
+        echo 'Updated Succesfully';
+    }
+    else
+    {
+        echo 'Something went wrong';
+    }
+
+?>
+
+==========================================================================================================================================================================================================================================
+
+DELETE
+
+
+<?php
+
+include('connect.php');
+$id=$_POST["id"];
+
+
+$sql="Delete from info where id ='$id'";
+
+
+//$ex=mysqli_query($con,$sql);
+
+if(mysqli_query($con,$sql))
+{
+    echo 'Record Deleted Succesfully';
+}
+else
+{
+    echo 'Something went Wrong';
+}
+
+
+?>
